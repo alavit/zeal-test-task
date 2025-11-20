@@ -1,0 +1,13 @@
+{
+  "name": "summer-spins-tests",
+  "version": "1.0.0",
+  "description": "Automated tests for Summer Spins help page",
+  "scripts": {
+    "test": "playwright test"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.40.0",
+    "typescript": "^5.3.0",
+    "ts-node": "^10.9.0"
+  }
+}
