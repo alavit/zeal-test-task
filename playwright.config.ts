@@ -8,7 +8,6 @@ export default defineConfig({
     workers: process.env.CI ? 1 : undefined,
     reporter: 'html',
     use: {
-        headless: false,
         baseURL: 'https://games.lotto24.de',
         trace: 'on',
     },
@@ -20,6 +19,7 @@ export default defineConfig({
         },
         {
             name: 'chromium',
+            testMatch: '*.spec.ts',
             use: {
                 ...devices['Desktop Chrome'],
                 storageState: 'playwright/.auth/user.json',

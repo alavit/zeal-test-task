@@ -1,33 +1,32 @@
 import { test, expect } from '@playwright/test';
+import { SummerSpinsPage } from '../pages/SummerSpinsPage';
+import { HelpPage } from '../pages/HelpPage';
 
 test.describe('Summer Spins Help Page', () => {
+    let summerSpinsPage: SummerSpinsPage;
+    let helpPage: HelpPage;
 
-    test('should navigate to help page and verify content', async ({ page }) => {
-        await page.goto('/games/summerspins');
-        const helpLink = page.locator('[data-gtm-id="iwg.game.help.show"]');
-
-        await helpLink.click();
-
-        await expect(page).toHaveURL(/\/hilfe\/games\/summerspins/);
-        await expect(page.getByRole('heading', { name: 'Hilfe', exact: true })).toBeVisible();
-        await expect(page.getByRole('heading', { name: 'Summer Spins', exact: true })).toBeVisible();
-        await expect(page.getByText('Nähere Informationen', { exact: false })).toBeVisible();
-        const playButton = page.getByRole('button', { name: 'Summer Spins spielen' });
-        
-        await expect(playButton).toBeVisible();
+    test.beforeEach(async ({ page }) => {
+        summerSpinsPage = new SummerSpinsPage(page);
+        helpPage = new HelpPage(page);
+        await summerSpinsPage.goto();
     });
 
-     test('should content of help page be equal to content of in-game help', async ({ page }) => {
-        await page.goto('/games/summerspins');
+    test('should navigate to help page and verify content', async () => {
+        await summerSpinsPage.openHelpPage();
 
-        const inGameHelpLink = page.locator('svg path');
-        await inGameHelpLink.click();
-        const inGameHelpContent = await page.locator('.help').locator('p').textContent();
-        const helpLink = page.locator('[data-gtm-id="iwg.game.help.show"]');
-        await helpLink.click();
+        await helpPage.verifyUrl();
+        await helpPage.verifyContentVisible();
+    });
 
-        await expect(page).toHaveURL(/\/hilfe\/games\/summerspins/);
-        const helpContent = await page.locator('.help').textContent();
+     test('should content of help page be equal to content of in-game help', async () => {
+        await summerSpinsPage.openInGameHelp();
+        const inGameHelpContent = await summerSpinsPage.getInGameHelpContent();
+        
+        await summerSpinsPage.openHelpPage();
+
+        await helpPage.verifyUrl();
+        const helpContent = await helpPage.getHelpContent();
         expect(helpContent).toBe(inGameHelpContent);
     });
 });
